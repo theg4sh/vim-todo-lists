@@ -389,7 +389,6 @@ function! VimTodoListsCreateNewItemBelow()
   else
     normal! o- [ ] 
   endif
-  execute "normal! o" . l:indentline . "- [ ] "
   startinsert!
 endfunction
 
