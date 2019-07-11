@@ -363,9 +363,9 @@ function! VimTodoListsAppendDate()
     execute "s/$/ (" . l:date . ")"
     " XXX: makes better match up of date
     if (g:VimTodoListsDatesKeepCreation == 0)
-      execute "s/ ([^)]\\+)\\( ([^)]\\+)\\)$/\\1"
+      silent! execute "s/ ([^)]\\+)\\( ([^)]\\+)\\)$/\\1"
     else
-      execute "s/\\( ([^)]\\+)\\) ([^)]\\+)$/\\1"
+      silent! execute "s/\\( ([^)]\\+)\\) ([^)]\\+)$/\\1"
     endif
   endif
 endfunction
