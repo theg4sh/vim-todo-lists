@@ -307,14 +307,18 @@ function! VimTodoListsUpdateParent(lineno)
     if VimTodoListsItemIsNotDone(getline(current_line)) == 1
       " Not all children are done
       call VimTodoListsSetItemNotDone(l:parent_lineno)
-      call VimTodoListsMoveSubtreeUp(l:parent_lineno)
+      if (g:VimTodoListsDoneMoveDown == 1)
+        call VimTodoListsMoveSubtreeUp(l:parent_lineno)
+      endif
       call VimTodoListsUpdateParent(l:parent_lineno)
       return
     endif
   endfor
 
   call VimTodoListsSetItemDone(l:parent_lineno)
-  call VimTodoListsMoveSubtreeDown(l:parent_lineno)
+  if (g:VimTodoListsDoneMoveDown == 1)
+    call VimTodoListsMoveSubtreeDown(l:parent_lineno)
+  endif
   call VimTodoListsUpdateParent(l:parent_lineno)
 endfunction
 
@@ -459,10 +463,14 @@ function! VimTodoListsToggleItem()
 
   if VimTodoListsItemIsNotDone(l:line) == 1
     call VimTodoListsForEachChild(l:lineno, 'VimTodoListsSetItemDone')
-    call VimTodoListsMoveSubtreeDown(l:lineno)
+    if (g:VimTodoListsDoneMoveDown == 1)
+      call VimTodoListsMoveSubtreeDown(l:lineno)
+    endif
   elseif VimTodoListsItemIsDone(l:line) == 1
     call VimTodoListsForEachChild(l:lineno, 'VimTodoListsSetItemNotDone')
-    call VimTodoListsMoveSubtreeUp(l:lineno)
+    if (g:VimTodoListsDoneMoveDown == 1)
+      call VimTodoListsMoveSubtreeUp(l:lineno)
+    endif
   endif
 
   call VimTodoListsUpdateParent(l:lineno)
