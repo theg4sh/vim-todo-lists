@@ -30,6 +30,11 @@ function! VimTodoListsInit()
     let g:VimTodoListsKeepSameIndent = 1
   endif
 
+  " Move done trees automatically to the bottom of list
+  if !exists('g:VimTodoListsDoneMoveDown')
+    let g:VimTodoListsDoneMoveDown = 1
+  endif
+
   if !exists('g:VimTodoListsDatesEnabled')
     let g:VimTodoListsDatesEnabled = 0
   endif
@@ -356,6 +361,11 @@ function! VimTodoListsSetItemMode()
   inoremap <buffer> <S-Tab> <ESC>:VimTodoListsDecreaseIndent<CR>A
 endfunction
 
+function! VimTodoListsCurrentLineIndent(lineno)
+    let l:indentline = join(map(range(1,indent(a:lineno)), '" "'), '')
+    return l:indentline
+endfunction
+
 " Appends date at the end of the line
 function! VimTodoListsAppendDate()
   if(g:VimTodoListsDatesEnabled == 1)
@@ -372,8 +382,19 @@ endfunction
 
 " Creates a new item above the current line with the same indent
 function! VimTodoListsCreateNewItemAbove()
+  let l:indentline = VimTodoListsCurrentLineIndent(line('.'))
+  " Store current cursor position
+  let l:cursor_pos = getcurpos()
+  let l:parent_lineno = VimTodoListsFindParent(line('.'))
+  call VimTodoListsSetItemNotDone(l:parent_lineno)
+  call VimTodoListsUpdateParent(l:parent_lineno)
+  if (g:VimTodoListsDoneMoveDown == 1)
+    call VimTodoListsMoveSubtreeUp(l:parent_lineno)
+  endif
+  " Restore the current position
+  " Using the {curswant} value to set the proper column
+  call cursor(l:cursor_pos[1], l:cursor_pos[4])
   if (g:VimTodoListsKeepSameIndent == 1)
-    let l:indentline = join(map(range(1,indent(line('.'))), '" "'), '')
     execute "normal! O" . l:indentline . "- [ ] "
   else
     normal! O- [ ] 
@@ -383,8 +404,19 @@ endfunction
 
 " Creates a new item below the current line with the same indent
 function! VimTodoListsCreateNewItemBelow()
+  let l:indentline = VimTodoListsCurrentLineIndent(line('.'))
+  " Store current cursor position
+  let l:cursor_pos = getcurpos()
+  let l:parent_lineno = VimTodoListsFindParent(line('.'))
+  call VimTodoListsSetItemNotDone(l:parent_lineno)
+  call VimTodoListsUpdateParent(l:parent_lineno)
+  if (g:VimTodoListsDoneMoveDown == 1)
+    call VimTodoListsMoveSubtreeUp(l:parent_lineno)
+  endif
+  " Restore the current position
+  " Using the {curswant} value to set the proper column
+  call cursor(l:cursor_pos[1], l:cursor_pos[4])
   if (g:VimTodoListsKeepSameIndent == 1)
-    let l:indentline = join(map(range(1,indent(line('.'))), '" "'), '')
     execute "normal! o" . l:indentline . "- [ ] "
   else
     normal! o- [ ] 
