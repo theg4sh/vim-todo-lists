@@ -444,7 +444,7 @@ function! VimTodoListsGoToNextItem()
   normal! $
   silent! exec '/^\s*- \[.\]'
   silent! exec 'noh'
-  normal! l
+  normal! 3l
 endfunction
 
 
@@ -453,7 +453,7 @@ function! VimTodoListsGoToPreviousItem()
   normal! 0
   silent! exec '?^\s*- \[.\]'
   silent! exec 'noh'
-  normal! l
+  normal! 3l
 endfunction
 
 
