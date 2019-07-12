@@ -390,10 +390,12 @@ function! VimTodoListsCreateNewItemAbove()
   " Store current cursor position
   let l:cursor_pos = getcurpos()
   let l:parent_lineno = VimTodoListsFindParent(line('.'))
-  call VimTodoListsSetItemNotDone(l:parent_lineno)
-  call VimTodoListsUpdateParent(l:parent_lineno)
-  if (g:VimTodoListsDoneMoveDown == 1)
-    call VimTodoListsMoveSubtreeUp(l:parent_lineno)
+  if (l:parent_lineno != -1)
+    call VimTodoListsSetItemNotDone(l:parent_lineno)
+    call VimTodoListsUpdateParent(l:parent_lineno)
+    if (g:VimTodoListsDoneMoveDown == 1)
+      call VimTodoListsMoveSubtreeUp(l:parent_lineno)
+    endif
   endif
   " Restore the current position
   " Using the {curswant} value to set the proper column
@@ -412,10 +414,12 @@ function! VimTodoListsCreateNewItemBelow()
   " Store current cursor position
   let l:cursor_pos = getcurpos()
   let l:parent_lineno = VimTodoListsFindParent(line('.'))
-  call VimTodoListsSetItemNotDone(l:parent_lineno)
-  call VimTodoListsUpdateParent(l:parent_lineno)
-  if (g:VimTodoListsDoneMoveDown == 1)
-    call VimTodoListsMoveSubtreeUp(l:parent_lineno)
+  if (l:parent_lineno != -1)
+    call VimTodoListsSetItemNotDone(l:parent_lineno)
+    call VimTodoListsUpdateParent(l:parent_lineno)
+    if (g:VimTodoListsDoneMoveDown == 1)
+      call VimTodoListsMoveSubtreeUp(l:parent_lineno)
+    endif
   endif
   " Restore the current position
   " Using the {curswant} value to set the proper column
